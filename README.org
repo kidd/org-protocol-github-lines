@@ -1,4 +1,3 @@
-
 * org-protocol-github-lines
 
   The purpose of this plugin is to make it easier to switch from your
@@ -9,7 +8,7 @@
 
 ** Manual and usage
    In github pull request views, add an emacs button that makes emacs open that file/line.
-   [[file:org-protocol-github-lines.png][screenshot]]
+   [[file:https://github.com/kidd/org-protocol-github-lines/blob/master/org-protocol-github-lines.png][screenshot]]
 
 ** Code
 *** Browser

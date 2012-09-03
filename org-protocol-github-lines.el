@@ -23,10 +23,19 @@
 ;;
 
 ;;; Code:
+(require 'org-protocol)
+
+(setq org-protocol-github-project-path "/set/this/to/your/path")
 
 (defun rgc-github-comment (data)
   (let ((content (org-protocol-split-data data t)))
-    (message "%s"  content))
+    (message  "%s" content)
+    (with-current-buffer
+	(find-file (mapconcat 'identity
+			      (cons org-protocol-github-project-path (butlast content))
+			      "/"))
+      (goto-char (point-min))
+      (forward-line (1- (string-to-number (car (last content)))))))
   nil)
 
 (setq org-protocol-protocol-alist

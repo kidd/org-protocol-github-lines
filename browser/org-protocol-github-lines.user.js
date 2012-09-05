@@ -11,19 +11,18 @@
 console.log("Userscript started");
 
 
-function addJQuery(callback) {
-    // http://erikvold.com/blog/index.cfm/2010/6/14/using-jquery-with-a-user-script
-    var script = document.createElement("script");
-    script.setAttribute("src", "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js");
-    script.addEventListener('load', function() {
-        var script = document.createElement("script");
-        script.textContent = "(" + callback.toString() + ")();";
-        document.body.appendChild(script);
-    }, false);
-    document.body.appendChild(script);
-    console.log("JQuery loaded");
-}
-
+// function addJQuery(callback) {
+//     // http://erikvold.com/blog/index.cfm/2010/6/14/using-jquery-with-a-user-script
+//     var script = document.createElement("script");
+//     script.setAttribute("src", "//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js");
+//     script.addEventListener('load', function() {
+//         var script = document.createElement("script");
+//         script.textContent = "(" + callback.toString() + ")();";
+//         document.body.appendChild(script);
+//     }, false);
+//     document.body.appendChild(script);
+//     console.log("JQuery loaded");
+// }
 
 function main() {
 
@@ -38,21 +37,21 @@ function main() {
 
         var strip = function (s) {
             // remove white space from s
-            return s.replace(/^\s+|\s+$/g, '');
+            return s.replace(/^\s+|\s+$|\n/g, '').replace(/\s.*$/,'');
         }
 
-        var comments = $("div.inline-review-comment");
+        var comments = $("tr.inline-comments");
 
         $.each(comments,
             function(i, e) {
                 // add a link for emacs to each diff comment
                 console.log("Adding button");
-                var fnameNode = $(this).find(".data").prev();
+                var fnameNode = $(this).closest(".data").prev();
 		// $(".inline-comments").first().prev().find("td.line_numbers").each
                 var filename = fnameNode.data("path");
-                var lnumber = strip($(this).find("td.gi:first").prev().text());
+                var lnumber = strip($(this).prev().text());
 		// lnumber = $(this).find("td.gi:first").prev();
-
+		console.log($(this), e, i);
                 $(this).find("div.show-inline-comment-form").append("<a class='minibutton' href='"
                 + build_link(filename, lnumber) + "'>Open with Emacs</a>");
             }
@@ -62,8 +61,28 @@ function main() {
         console.log("org-protocol: Waiting for ajax load");
         window.setTimeout(main, 1000);
     }
-}
+};
 
+// function whenAvailable(name, callback) {
+//     var interval = 1000; // ms
+//     window.setTimeout(function() {
+//         if (typeof unsafeWindow.jQuery != 'undefined') {
+// 	   console.log("load!");
+//             callback(window[name]);
+//         } else {
+// 	    console.log("waiting a bit more");
+//             window.setTimeout(arguments.callee, interval);
+//         }
+//     }, interval);
+// }
+//whenAvailable("jQuery", main);
 
-addJQuery(main);
+//addJQuery(main);
+
+// Inject our main script
+var script = document.createElement('script');
+script.type = "text/javascript";
+script.textContent = '(' + main.toString() + ')();';
+document.body.appendChild(script);
+
 console.log("Userscript finished");

@@ -25,7 +25,7 @@
 ;;; Code:
 (require 'org-protocol)
 
-(setq org-protocol-github-project-path "/set/this/to/your/path")
+(setq org-protocol-github-project-path "/home/kidd/programmingStuff/elisp/org-protocol-github-lines/")
 
 (defun rgc-github-comment (data)
   (let ((content (org-protocol-split-data data t)))

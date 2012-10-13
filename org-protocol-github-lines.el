@@ -1,8 +1,8 @@
 ;;; org-protocol-github-lines.el --- Open files and lines in emacs from your browser (when on github)
 
-;; Copyright (C) 2012  kidd
+;; Copyright (C) 2012  Raimon Grau
 
-;; Author: kidd <kidd@sunflower>
+;; Author: Raimon Grau <raimonster@gmail.com>
 ;; Keywords: tools, extensions
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -25,11 +25,13 @@
 ;;; Code:
 (require 'org-protocol)
 
+
 (defvar org-protocol-projects '(("kidd/org-protocol-github-lines" "/home/kidd/programmingStuff/elisp/org-protocol-github-lines/")
 				("3scale/system" "/home/kidd/workspace/system")
-				("clasker/clasker" "/home/kidd/programmingStuff/elisp/clasker")))
+				("clasker/clasker" "/home/kidd/programmingStuff/elisp/clasker"))
+  "maps projects in the url to paths in your box")
 
-(defun rgc-github-comment (data)
+(defun org-protocol-github-comment (data)
   "data is the info related to the user/project/file/line of the
 clicked button"
   (let* ((content (org-protocol-split-data data t))
@@ -47,7 +49,7 @@ clicked button"
 (setq org-protocol-protocol-alist
       '(("Github comment"
          :protocol "github-comment"
-         :function rgc-github-comment)))
+         :function org-protocol-github-comment)))
 
 (provide 'org-protocol-github-lines)
 ;;; org-protocol-github-lines.el ends here

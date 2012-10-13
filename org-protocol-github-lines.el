@@ -25,17 +25,23 @@
 ;;; Code:
 (require 'org-protocol)
 
-(setq org-protocol-github-project-path "/home/kidd/programmingStuff/elisp/org-protocol-github-lines/")
+(defvar org-protocol-projects '(("kidd/org-protocol-github-lines" "/home/kidd/programmingStuff/elisp/org-protocol-github-lines/")
+				("3scale/system" "/home/kidd/workspace/system")
+				("clasker/clasker" "/home/kidd/programmingStuff/elisp/clasker")))
 
 (defun rgc-github-comment (data)
-  (let ((content (org-protocol-split-data data t)))
+  "data is the info related to the user/project/file/line of the
+clicked button"
+  (let* ((content (org-protocol-split-data data t))
+	 (key (format "%s/%s" (car content) (cadr content)))
+	 (file (butlast (cddr content)))
+	 (line (car (last content))))
     (message  "%s" content)
     (with-current-buffer
 	(find-file (mapconcat 'identity
-			      (cons org-protocol-github-project-path (butlast content))
-			      "/"))
+			      (cons (cadr (assoc key org-protocol-projects)) file) "/"))
       (goto-char (point-min))
-      (forward-line (1- (string-to-number (car (last content)))))))
+      (forward-line (1- (string-to-number line)))))
   nil)
 
 (setq org-protocol-protocol-alist

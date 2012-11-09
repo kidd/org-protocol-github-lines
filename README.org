@@ -2,13 +2,15 @@
 
   The purpose of this plugin is to make it easier to switch from your
   browser to emacs when looking at code reviews
+  [[file:http://puntoblogspot.blogspot.com.es/2012/10/github-emacs-org-protocol-github-lines.html][blogpost and demo]]
+
 ** Requirements
    org-mode
    org-protocol
 
 ** Manual and usage
    In github pull request views, add an emacs button that makes emacs open that file/line.
-   [[file:https://github.com/kidd/org-protocol-github-lines/blob/master/org-protocol-github-lines.png][screenshot]]
+   [[file:http://puntoblogspot.blogspot.com.es/2012/10/github-emacs-org-protocol-github-lines.html][blogpost and demo]]
 
 ** Code
 *** Browser

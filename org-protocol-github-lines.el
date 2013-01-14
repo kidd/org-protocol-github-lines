@@ -25,16 +25,23 @@
 ;;; Code:
 (require 'org-protocol)
 
+(defgroup org-protocol-github nil
+  "Browser to Emacs interface for GitHub"
+  :prefix "org-protocol-github-"
+  :group 'tools)
 
-(defvar org-protocol-projects '(("kidd/org-protocol-github-lines" "/home/kidd/programmingStuff/elisp/org-protocol-github-lines/")
-				("3scale/system" "/home/kidd/workspace/system")
-				("clasker/clasker" "/home/kidd/programmingStuff/elisp/clasker"))
-  "maps projects in the url to paths in your box")
+(defcustom org-protocol-github-projects nil
+  "Map of GitHub projects to directories.
+See also `org-protocol-github-project-directories'."
+  :group 'org-protocol-github
+  :type '(repeat (cons (string :tag "GitHub project name (user/project)")
+                       (directory :tag "Project directory"))))
+
 
 ;;;###autoload
 (defun org-protocol-github-comment (data)
-  "data is the info related to the user/project/file/line of the
-clicked button"
+  "Handle github-comment protocol.
+DATA contains the user/project/file/line information."
   (let* ((content (org-protocol-split-data data t))
 	 (key (format "%s/%s" (car content) (cadr content)))
 	 (file (butlast (cddr content)))

@@ -1,74 +1,66 @@
 // ==UserScript==
 // @name           org-protocol-github-lines
 // @description    Insert emacs links to commented lines in gh pull requests.
-// @author         Raimon Grau Cuscó <raimonster@gmail.com>
+// @author         Rüdiger Sonderfeld <ruediger@c-plusplus.de>
 // @include        https://github.com/*/pull/*
 // @include        https://github.com/*/commit/*
-// @version        0.1.2
+// @version        0.2.0
+// @grant          none
 // @license        LGPL http://www.gnu.org/licenses/lgpl.html
 // ==/UserScript==
 
-console.log("Userscript started");
+var forEach = Array.prototype.forEach;
+
+function createLink(fileName, lineNumber) {
+  var project = document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1];
+  return "org-protocol://github-comment://" + project + "/" + fileName + "/" + lineNumber;
+}
+
+var timeout = 1000 /* ms */,
+    maxCallCounter = 5;
+
+var callCounter = 0;
 
 function main() {
+  ++callCounter;
 
-    console.log("Running");
-    if ($("tr.inline-comments").length > 0) {
-        console.log("org-protocol: Ajax loaded, adding Emacs links");
-        var build_link = function (fname, lnumber) {
-            // create the org-protocol url
-            console.log("org-protocol: Generating link for " + fname + "#" + lnumber);
-            return "org-protocol://github-comment://" + document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1] + "/" + fname + "/" + lnumber;
+  var x = document.querySelector(".file tr.inline-comments");
+  if(x) {
+    var files = document.querySelectorAll(".file");
+
+    forEach.call(files, function(file) {
+      var meta = file.querySelector(".meta");
+      var fileName = meta.dataset.path;
+      var inline_comments = file.querySelectorAll("tr.inline-comments");
+      forEach.call(inline_comments, function(comment) {
+        var line = comment.previousElementSibling;
+        var line_numbers = line.querySelectorAll("td.line_numbers");
+        var lineNumber;
+        forEach.call(line_numbers, function(ln) {
+          var txt = ln.textContent.trim();
+          if(txt.length > 0) {
+            lineNumber = txt;
+          }
+        });
+        if (lineNumber) {
+          var form = comment.querySelector("div.show-inline-comment-form");
+          var button = document.createElement("a");
+          button.setAttribute("class", "minibutton");
+          button.setAttribute("href", createLink(fileName, lineNumber));
+          button.textContent = "Open with Emacs";
+          form.appendChild(button);
         }
+      });
+    });
 
-        var strip = function (s) {
-            // remove white space from s
-            return s.replace(/^\s+|\s+$|\n/g, '').replace(/\s.*$/,'');
-        }
+  }
+  else if(callCounter < maxCallCounter) {
+    console.log("#" + callCounter + " No comment found.  Waiting for AJAX to finish.");
+    window.setTimeout(main, timeout);
+  }
+  else {
+    console.log("Giving up waiting for comments to load.  Probably no inline comments.");
+  }
+}
 
-        var comments = $("tr.inline-comments");
-
-        $.each(comments,
-            function(i, e) {
-                // add a link for emacs to each diff comment
-                console.log("Adding button");
-                var fnameNode = $(this).closest(".data").prev();
-		// $(".inline-comments").first().prev().find("td.line_numbers").each
-                var filename = fnameNode.data("path");
-                var lnumber = strip($(this).prev().text());
-		// lnumber = $(this).find("td.gi:first").prev();
-		console.log($(this), e, i);
-                $(this).find("div.show-inline-comment-form").append("<a class='minibutton' href='"
-                + build_link(filename, lnumber) + "'>Open with Emacs</a>");
-            }
-        );
-    }
-    else {
-        console.log("org-protocol: Waiting for ajax load");
-        window.setTimeout(main, 1000);
-    }
-};
-
-// function whenAvailable(name, callback) {
-//     var interval = 1000; // ms
-//     window.setTimeout(function() {
-//         if (typeof unsafeWindow.jQuery != 'undefined') {
-// 	   console.log("load!");
-//             callback(window[name]);
-//         } else {
-// 	    console.log("waiting a bit more");
-//             window.setTimeout(arguments.callee, interval);
-//         }
-//     }, interval);
-// }
-//whenAvailable("jQuery", main);
-
-//addJQuery(main);
-
-// Inject our main script
-var script = document.createElement('script');
-script.type = "text/javascript";
-script.textContent = '(' + main.toString() + ')();';
-document.body.appendChild(script);
-
-console.log("Userscript finished");
+main();

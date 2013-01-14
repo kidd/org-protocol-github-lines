@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           org-protocol-github-lines
+// @name           org-protocol-github-comment
 // @description    Insert emacs links to commented lines in gh pull requests.
 // @author         Rüdiger Sonderfeld <ruediger@c-plusplus.de>
 // @include        https://github.com/*/pull/*

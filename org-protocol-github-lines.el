@@ -31,6 +31,7 @@
 				("clasker/clasker" "/home/kidd/programmingStuff/elisp/clasker"))
   "maps projects in the url to paths in your box")
 
+;;;###autoload
 (defun org-protocol-github-comment (data)
   "data is the info related to the user/project/file/line of the
 clicked button"
@@ -46,10 +47,11 @@ clicked button"
       (forward-line (1- (string-to-number line)))))
   nil)
 
-(setq org-protocol-protocol-alist
-      '(("Github comment"
-         :protocol "github-comment"
-         :function org-protocol-github-comment)))
+;;;###autoload
+(add-to-list 'org-protocol-protocol-alist
+             '("Github comment"
+               :protocol "github-comment"
+               :function org-protocol-github-comment))
 
 (provide 'org-protocol-github-lines)
 ;;; org-protocol-github-lines.el ends here

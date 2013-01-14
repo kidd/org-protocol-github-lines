@@ -24,6 +24,7 @@
 
 ;;; Code:
 (require 'org-protocol)
+(require 'cl-macs)
 
 (defgroup org-protocol-github nil
   "Browser to Emacs interface for GitHub"
@@ -37,19 +38,43 @@ See also `org-protocol-github-project-directories'."
   :type '(repeat (cons (string :tag "GitHub project name (user/project)")
                        (directory :tag "Project directory"))))
 
+(defcustom org-protocol-github-project-directories nil
+  "List of directories where projects are stored.
+See also `org-protocol-github-projects'."
+  :group 'org-protocol-github
+  :type '(repeat directory))
+
+(defun org-protocol-github--find-project-directory (user project)
+  "Find the github project specified by USER and PROJECT.
+If there is no mapping in `org-protocol-github-projects' then
+`org-protocol-github-project-directories' is searched for a directory named
+after the project."
+  (let ((key (concat user "/" project)))
+    (or
+     (cdr (assoc key org-protocol-github-projects))
+     (cl-loop for d in org-protocol-github-project-directories
+              with file-name
+              do (setq file-name (expand-file-name project
+                                                   (file-name-as-directory d)))
+              when (file-exists-p file-name)
+                return file-name))))
 
 ;;;###autoload
 (defun org-protocol-github-comment (data)
   "Handle github-comment protocol.
 DATA contains the user/project/file/line information."
   (let* ((content (org-protocol-split-data data t))
-	 (key (format "%s/%s" (car content) (cadr content)))
+         (user (car content))
+         (project (cadr content))
 	 (file (butlast (cddr content)))
 	 (line (car (last content))))
-    (message  "%s" content)
+    (message "%s" content)
     (with-current-buffer
-	(find-file (mapconcat 'identity
-			      (cons (cadr (assoc key org-protocol-projects)) file) "/"))
+	(find-file
+         (mapconcat 'identity
+                    (cons (org-protocol-github--find-project-directory user
+                                                                       project)
+                          file) "/"))
       (goto-char (point-min))
       (forward-line (1- (string-to-number line)))))
   nil)

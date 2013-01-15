@@ -33,7 +33,7 @@ forEach.call(textFiles, function(textFile) {
   var href = fileLink.getAttribute('href');
 
   var file = href.replace(/(blob|tree)\/[^\/]+\//, ""); // remove /blob/branch/ part
-  var orgLink = "org-protocol://github-comment:/" + file + "/";
+  var orgLink = "org-protocol://github-lines:/" + file + "/";
   var imgHTML = '<a href="' + orgLink + '"><img src="' + emacsIcon + '" alt="E" title="Open in Emacs"></img></a>';
 
   var range = document.createRange();

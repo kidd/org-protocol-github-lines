@@ -60,8 +60,8 @@ after the project."
                 return file-name))))
 
 ;;;###autoload
-(defun org-protocol-github-comment (data)
-  "Handle github-comment protocol.
+(defun org-protocol-github-lines (data)
+  "Handle github-lines protocol.
 DATA contains the user/project/file/line information."
   (let* ((content (org-protocol-split-data data t))
          (user (car content))
@@ -83,9 +83,9 @@ DATA contains the user/project/file/line information."
 
 ;;;###autoload
 (add-to-list 'org-protocol-protocol-alist
-             '("Github comment"
-               :protocol "github-comment"
-               :function org-protocol-github-comment))
+             '("Open files from GitHub."
+               :protocol "github-lines"
+               :function org-protocol-github-lines))
 
 (provide 'org-protocol-github-lines)
 ;;; org-protocol-github-lines.el ends here

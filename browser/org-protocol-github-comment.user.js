@@ -13,7 +13,7 @@ var forEach = Array.prototype.forEach;
 
 function createLink(fileName, lineNumber) {
   var project = document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1];
-  return "org-protocol://github-comment://" + project + "/" + fileName + "/" + lineNumber;
+  return "org-protocol://github-lines://" + project + "/" + fileName + "/" + lineNumber;
 }
 
 var timeout = 1000 /* ms */,

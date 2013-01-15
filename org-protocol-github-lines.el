@@ -67,16 +67,18 @@ DATA contains the user/project/file/line information."
          (user (car content))
          (project (cadr content))
 	 (file (butlast (cddr content)))
-	 (line (car (last content))))
+	 (line (car (last content)))
+         (dir (org-protocol-github--find-project-directory user
+                                                           project)))
     (message "%s" content)
+    (unless dir
+      (error "Project %s/%s not found on local machine." user project))
     (with-current-buffer
-	(find-file
-         (mapconcat 'identity
-                    (cons (org-protocol-github--find-project-directory user
-                                                                       project)
-                          file) "/"))
-      (goto-char (point-min))
-      (forward-line (1- (string-to-number line)))))
+        (find-file
+         (mapconcat 'identity (cons dir file) "/"))
+      (when line
+        (goto-char (point-min))
+        (forward-line (1- (string-to-number line))))))
   nil)
 
 ;;;###autoload

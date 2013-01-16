@@ -29,8 +29,14 @@ forEach.call(textFiles, function(textFile) {
     return;
   }
   var fileLink = content.firstElementChild;
+  if(!fileLink) {
+    return;
+  }
 
   var href = fileLink.getAttribute('href');
+  if(!href) {
+    return;
+  }
 
   var file = href.replace(/(blob|tree)\/[^\/]+\//, ""); // remove /blob/branch/ part
   var orgLink = "org-protocol://github-lines:/" + file + "/";

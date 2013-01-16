@@ -23,3 +23,9 @@
 
 *** Emacs
     org-protocol-github-lines.el contains the code to open the actual file
+
+* Authors & contribs
+
+  - Raimon Grau Cusco <raimonster@gmail.com> 
+  - [[https://github.com/ruediger][Rüdiger Sonderfeld]]
+  

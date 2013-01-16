@@ -26,6 +26,6 @@
 
 * Authors & contribs
 
-  - Raimon Grau Cusco <raimonster@gmail.com> 
-  - [[https://github.com/ruediger][Rüdiger Sonderfeld]]
+  - [[http://github.com/kidd][Raimon Grau Cusco]] <raimonster@gmail.com> 
+  - [[https://github.com/ruediger][Rüdiger Sonderfeld]] <ruediger@c-plusplus.de>
   

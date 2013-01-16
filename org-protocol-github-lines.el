@@ -24,32 +24,68 @@
 
 ;;; Code:
 (require 'org-protocol)
+(require 'cl-macs)
 
+(defgroup org-protocol-github nil
+  "Browser to Emacs interface for GitHub"
+  :prefix "org-protocol-github-"
+  :group 'tools)
 
-(defvar org-protocol-projects '(("kidd/org-protocol-github-lines" "/home/kidd/programmingStuff/elisp/org-protocol-github-lines/")
-				("3scale/system" "/home/kidd/workspace/system")
-				("clasker/clasker" "/home/kidd/programmingStuff/elisp/clasker"))
-  "maps projects in the url to paths in your box")
+(defcustom org-protocol-github-projects nil
+  "Map of GitHub projects to directories.
+See also `org-protocol-github-project-directories'."
+  :group 'org-protocol-github
+  :type '(repeat (cons (string :tag "GitHub project name (user/project)")
+                       (directory :tag "Project directory"))))
 
-(defun org-protocol-github-comment (data)
-  "data is the info related to the user/project/file/line of the
-clicked button"
+(defcustom org-protocol-github-project-directories nil
+  "List of directories where projects are stored.
+See also `org-protocol-github-projects'."
+  :group 'org-protocol-github
+  :type '(repeat directory))
+
+(defun org-protocol-github--find-project-directory (user project)
+  "Find the github project specified by USER and PROJECT.
+If there is no mapping in `org-protocol-github-projects' then
+`org-protocol-github-project-directories' is searched for a directory named
+after the project."
+  (let ((key (concat user "/" project)))
+    (or
+     (cdr (assoc key org-protocol-github-projects))
+     (cl-loop for d in org-protocol-github-project-directories
+              with file-name
+              do (setq file-name (expand-file-name project
+                                                   (file-name-as-directory d)))
+              when (file-exists-p file-name)
+                return file-name))))
+
+;;;###autoload
+(defun org-protocol-github-lines (data)
+  "Handle github-lines protocol.
+DATA contains the user/project/file/line information."
   (let* ((content (org-protocol-split-data data t))
-	 (key (format "%s/%s" (car content) (cadr content)))
+         (user (car content))
+         (project (cadr content))
 	 (file (butlast (cddr content)))
-	 (line (car (last content))))
-    (message  "%s" content)
+	 (line (car (last content)))
+         (dir (org-protocol-github--find-project-directory user
+                                                           project)))
+    (message "%s" content)
+    (unless dir
+      (error "Project %s/%s not found on local machine." user project))
     (with-current-buffer
-	(find-file (mapconcat 'identity
-			      (cons (cadr (assoc key org-protocol-projects)) file) "/"))
-      (goto-char (point-min))
-      (forward-line (1- (string-to-number line)))))
+        (find-file
+         (mapconcat 'identity (cons dir file) "/"))
+      (when line
+        (goto-char (point-min))
+        (forward-line (1- (string-to-number line))))))
   nil)
 
-(setq org-protocol-protocol-alist
-      '(("Github comment"
-         :protocol "github-comment"
-         :function org-protocol-github-comment)))
+;;;###autoload
+(add-to-list 'org-protocol-protocol-alist
+             '("Open files from GitHub."
+               :protocol "github-lines"
+               :function org-protocol-github-lines))
 
 (provide 'org-protocol-github-lines)
 ;;; org-protocol-github-lines.el ends here

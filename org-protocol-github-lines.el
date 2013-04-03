@@ -87,5 +87,11 @@ DATA contains the user/project/file/line information."
                :protocol "github-lines"
                :function org-protocol-github-lines))
 
+(add-to-list 'org-protocol-protocol-alist
+             '("Clone repos from GitHub."
+               :protocol "github-clone"
+               :function org-protocol-github-lines))
+
+
 (provide 'org-protocol-github-lines)
 ;;; org-protocol-github-lines.el ends here

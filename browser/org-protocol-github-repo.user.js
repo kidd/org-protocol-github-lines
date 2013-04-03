@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           org-protocol-github-files
+// @name           org-protocol-github-repo
 // @description    Insert Emacs links for files on github
 // @author         Raimon Grau Cusco <raimonster@gmail.com>
 // @include        https://github.com/*
@@ -8,18 +8,17 @@
 // @license        LGPL http://www.gnu.org/licenses/lgpl.html
 // ==/UserScript==
 
-var forEach = Array.prototype.forEach;
-
-/*
- * Structure is
- * <tr><td><span class="mini-icon-text-file" /></td><td class="content"><a href="..."></a></td></tr>
- */
-
 
 var url = document.URL;
-var repo = url.replace(/https?:\/\/github\.com\//, "");
-var repo = url.replace(/[^/]*\/[^/]*/, "");
-var textFiles = document.querySelectorAll(".js-current-repository");
-$(textFiles[0].parentNode).after('<strong style="float: right;"> <a href="org-protocol://github-clone/' + repo +'">clone!</a></strong>');
+var project = document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1];
+var repoTitle = document.querySelectorAll(".js-current-repository");
 
-});
+var mydiv = document.createElement("strong");
+mydiv.style.cssText = "float: right;";
+var cloneLink = document.createElement("a");
+
+cloneLink.appendChild(document.createTextNode("Clone"));
+
+cloneLink.href = "org-protocol://github-clone/" + project;
+mydiv.appendChild(cloneLink);
+repoTitle[0].parentNode.parentNode.appendChild(mydiv);

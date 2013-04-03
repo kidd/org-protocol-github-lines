@@ -81,16 +81,32 @@ DATA contains the user/project/file/line information."
         (forward-line (1- (string-to-number line))))))
   nil)
 
+(defun org-protocol-github-repo (data)
+  (let* ((content (org-protocol-split-data data t))
+	(user (car content))
+	(project (cadr content))
+	(dir (org-protocol-github--find-project-directory user
+							  project)))
+    (if dir (message "repo %s/%s is already in" user project)
+      (org-protocol-github-clone user project))
+    nil
+    ))
+
+(defun org-protocol-github-clone (user project)
+  (let ((dir (car org-protocol-github-project-directories)))
+    (async-shell-command (format "cd %s;git clone git@github.com:%s/%s.git" dir user project))))
+
 ;;;###autoload
 (add-to-list 'org-protocol-protocol-alist
              '("Open files from GitHub."
                :protocol "github-lines"
                :function org-protocol-github-lines))
 
+;;;###autoload
 (add-to-list 'org-protocol-protocol-alist
              '("Clone repos from GitHub."
                :protocol "github-clone"
-               :function org-protocol-github-lines))
+               :function org-protocol-github-repo))
 
 
 (provide 'org-protocol-github-lines)

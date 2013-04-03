@@ -9,6 +9,14 @@
 // ==/UserScript==
 
 
+var insertAfter = function(e,i){
+     if(e.nextSibling){
+         e.parentNode.insertBefore(i,e.nextSibling);
+     } else {
+         e.parentNode.appendChild(i);
+     }
+};
+
 var url = document.URL;
 var project = document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1];
 var repoTitle = document.querySelectorAll(".js-current-repository");
@@ -19,6 +27,7 @@ var cloneLink = document.createElement("a");
 
 cloneLink.appendChild(document.createTextNode("Clone"));
 
-cloneLink.href = "org-protocol://github-clone/" + project;
+cloneLink.href = "org-protocol://github-clone://" + project;
 mydiv.appendChild(cloneLink);
-repoTitle[0].parentNode.parentNode.appendChild(mydiv);
+var title = repoTitle[0].parentNode;
+insertAfter(title, mydiv);

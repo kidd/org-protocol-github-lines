@@ -38,7 +38,7 @@ See also `org-protocol-github-project-directories'."
   :type '(repeat (cons (string :tag "GitHub project name (user/project)")
                        (directory :tag "Project directory"))))
 
-(defcustom org-protocol-github-project-directories nil
+(defcustom org-protocol-github-project-directories (list temporary-file-directory)
   "List of directories where projects are stored.
 See also `org-protocol-github-projects'."
   :group 'org-protocol-github
@@ -87,14 +87,14 @@ DATA contains the user/project/file/line information."
 	(project (cadr content))
 	(dir (org-protocol-github--find-project-directory user
 							  project)))
-    (if dir (message "repo %s/%s is already in" user project)
-      (org-protocol-github-clone user project))
-    nil
-    ))
+    (if dir
+	(message "repo %s/%s is already in" user project)
+      (org-protocol-github--clone user project))
+    (format "%s%s/" (car org-protocol-github-project-directories) project)))
 
-(defun org-protocol-github-clone (user project)
-  (let ((dir (car org-protocol-github-project-directories)))
-    (async-shell-command (format "cd %s;git clone git@github.com:%s/%s.git" dir user project))))
+(defun org-protocol-github--clone (user project)
+  (let ((default-directory  (car org-protocol-github-project-directories)))
+    (async-shell-command (format "git clone git@github.com:%s/%s.git" user project))))
 
 ;;;###autoload
 (add-to-list 'org-protocol-protocol-alist

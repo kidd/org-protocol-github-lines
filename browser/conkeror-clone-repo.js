@@ -1,11 +1,12 @@
-// Code to use in github-mode.js
-
-interactive("github-clone-repo", null, function(I){
+function clone_repo(I){
     var document = I.buffer.document;
     var url = document.URL;
-    var project = document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1];
-var repoTitle = document.querySelectorAll(".js-current-repository");
-cloneLink = "org-protocol://github-clone://" + project;
-document.location = cloneLink;
-});
+    var project = document.URL.match(/(bitbucket|github)\....\/([^/]+\/[^/]+)/);
+    cloneLink = "org-protocol://"+ project[1] +"-clone://" + project[2];
+    document.location = cloneLink;
+}
+
+interactive("github-clone-repo", null, clone_repo );
+interactive("clone-repo", null, clone_repo );
+
 set_protocol_handler("org-protocol", find_file_in_path("emacsclient"));

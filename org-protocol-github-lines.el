@@ -81,7 +81,7 @@ DATA contains the user/project/file/line information."
         (forward-line (1- (string-to-number line))))))
   nil)
 
-(defun org-protocol-github-repo (data)
+(defun org-protocol-clone-repo (data server)
   (let* ((content (org-protocol-split-data data t))
 	(user (car content))
 	(project (cadr content))
@@ -89,12 +89,18 @@ DATA contains the user/project/file/line information."
 							  project)))
     (if dir
 	(message "repo %s/%s is already in" user project)
-      (org-protocol-github--clone user project))
+      (org-protocol--clone user project server))
     (format "%s%s/" (car org-protocol-github-project-directories) project)))
 
-(defun org-protocol-github--clone (user project)
+(defun org-protocol--clone (user project server)
   (let ((default-directory  (car org-protocol-github-project-directories)))
-    (async-shell-command (format "git clone git@github.com:%s/%s.git" user project))))
+    (async-shell-command (format "git clone git@%s:%s/%s.git" server user project))))
+
+(defun org-protocol-github-repo (data)
+  (org-protocol-clone-repo data "github.com"))
+
+(defun org-protocol-bitbucket-repo (data)
+  (org-protocol-clone-repo data "bitbucket.org"))
 
 ;;;###autoload
 (add-to-list 'org-protocol-protocol-alist
@@ -108,6 +114,11 @@ DATA contains the user/project/file/line information."
                :protocol "github-clone"
                :function org-protocol-github-repo))
 
+;;;###autoload
+(add-to-list 'org-protocol-protocol-alist
+             '("Clone repos from Bitbucket."
+               :protocol "bitbucket-clone"
+               :function org-protocol-bitbucket-repo))
 
 (provide 'org-protocol-github-lines)
 ;;; org-protocol-github-lines.el ends here

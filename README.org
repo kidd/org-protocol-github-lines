@@ -28,6 +28,11 @@
 *** Emacs
     org-protocol-github-lines.el contains the code to open the actual file
 
+** Conkeror
+	 The js file for conkeror provides a command `m-x clone-repo` which
+	 sends the signal to the emacs server to clone the
+	 "repo-at-buffer". It works with both github and bitbucket.
+
 * Authors & contribs
 
   - [[http://github.com/kidd][Raimon Grau Cusco]] <raimonster@gmail.com>

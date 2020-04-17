@@ -53,9 +53,8 @@ after the project."
     (or
      (cdr (assoc key org-protocol-github-projects))
      (cl-loop for d in org-protocol-github-project-directories
-              with file-name
-              do (setq file-name (expand-file-name project
-                                                   (file-name-as-directory d)))
+              for file-name = (expand-file-name project
+                                                (file-name-as-directory d))
               when (file-exists-p file-name)
                 return file-name))))
 

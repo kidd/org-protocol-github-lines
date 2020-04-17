@@ -4,6 +4,7 @@
   browser to emacs when looking at code reviews
   [[file:http://puntoblogspot.blogspot.com.es/2012/10/github-emacs-org-protocol-github-lines.html][blogpost and demo]]
 
+  [[./button.png]]
 ** Requirements
    org-mode
    org-protocol

@@ -29,6 +29,10 @@
 *** Emacs
     org-protocol-github-lines.el contains the code to open the actual file
 
+
+** Firefox/Chrome
+   Install [[browser/edit-with-emacs.js]] using tampermonkey or whatever
+   monkey are you using in your browser.
 ** Conkeror
 	 The js file for conkeror provides a command `m-x clone-repo` which
 	 sends the signal to the emacs server to clone the

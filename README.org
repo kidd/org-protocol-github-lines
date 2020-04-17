@@ -6,19 +6,24 @@
 
   [[./button.png]]
 ** Requirements
-   org-mode
-   org-protocol
+   - org-mode
+   - org-protocol
 
 ** Manual and usage
    In github pull request views, add an emacs button that makes emacs open that file/line.
    [[file:http://puntoblogspot.blogspot.com.es/2012/10/github-emacs-org-protocol-github-lines.html][blogpost and demo]]
 
-   Recently it got support for bitbucket repos also. No interface in
-   firefox/chrome yet. To use it in conkeror, `m-x clone-repo` to
-   clone (both bb or gh)
+   At some point it got support for bitbucket repos also but it hasn't
+   been updated in a while. PRs welcome.
+
+   If you're using conkeror, you can `m-x clone-repo` to clone (both bb or gh)
 
 ** Code
-*** Browser
+*** Firefox/Chrome
+   Install [[browser/edit-with-emacs.js]] using tampermonkey or whatever
+   monkey are you using in your browser.
+
+*** Conkeror
     In browser/org-protocol-github-lines.user.js theres the plugin
     that will insert the links on code comments that will link to
     emacs.
@@ -30,9 +35,6 @@
     org-protocol-github-lines.el contains the code to open the actual file
 
 
-** Firefox/Chrome
-   Install [[browser/edit-with-emacs.js]] using tampermonkey or whatever
-   monkey are you using in your browser.
 ** Conkeror
 	 The js file for conkeror provides a command `m-x clone-repo` which
 	 sends the signal to the emacs server to clone the

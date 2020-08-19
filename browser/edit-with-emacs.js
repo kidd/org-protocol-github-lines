@@ -21,7 +21,7 @@ function createLink(fileName, lineNumber) {
 
     comments.forEach(function(f) {
         var file=f.previousElementSibling.previousElementSibling.firstElementChild.title;
-        var a = f.previousElementSibling.querySelectorAll("td.js-linkable-line-number");
+        var a = f.previousElementSibling.querySelectorAll("td.blob-num");
         var line = a[a.length-1].getAttribute("data-line-number");
 
 

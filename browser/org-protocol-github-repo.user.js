@@ -19,11 +19,12 @@ var insertAfter = function(e,i){
 
 var url = document.URL;
 var project = document.URL.match(/github.com\/([^/]+\/[^/]+)/)[1];
-var repoTitle = document.querySelectorAll(".js-current-repository");
+var repoTitle = document.querySelectorAll("get-repo");
 
-var mydiv = document.createElement("strong");
-mydiv.style.cssText = "float: right;";
+var mydiv = document.createElement("div");
+mydiv.classList = "d-none d-md-flex ml-2";
 var cloneLink = document.createElement("a");
+cloneLink.classList = "btn btn-primary";
 
 cloneLink.appendChild(document.createTextNode("Clone"));
 

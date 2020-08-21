@@ -16,29 +16,24 @@
    At some point it got support for bitbucket repos also but it hasn't
    been updated in a while. PRs welcome.
 
-   If you're using conkeror, you can `m-x clone-repo` to clone (both bb or gh)
-
 ** Code
 *** Firefox/Chrome
-   Install [[browser/edit-with-emacs.js]] using tampermonkey or whatever
-   monkey are you using in your browser.
+    Use tampermonkey or whatever other *monkey in your browser to add
+    userscripts.
 
-*** Conkeror
-    In browser/org-protocol-github-lines.user.js theres the plugin
-    that will insert the links on code comments that will link to
-    emacs.
+    Install [[./browser/edit-with-emacs.js]] to add the "Open with emacs"
+    button on code comments.
+
+    Install [[./browser/org-protocol-github-repo.user.js]] to add a "Clone"
+    button on the main pages of repos.
+
+    [[./clone-button.png]]
 
 *** OS
     os/xdg-open Predefine org-protocol to open emacsclient
 
 *** Emacs
     org-protocol-github-lines.el contains the code to open the actual file
-
-
-** Conkeror
-	 The js file for conkeror provides a command `m-x clone-repo` which
-	 sends the signal to the emacs server to clone the
-	 "repo-at-buffer". It works with both github and bitbucket.
 
 * Authors & contribs
 
